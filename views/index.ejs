@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Học từ vựng online miễn phí</title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+       $(document).ready(function () {
+           <% if(acc !== undefined){ %>
+           $('#login_full_box').hide();
+           $('#main_full_box').show();
+           <% } %>
+
+           <% if(acc === undefined){ %>
+
+           $('#login_full_box').show();
+           $('#main_full_box').hide();
+           <% } %>
+       });
+
+    </script>
+    <!-- Datatables -->
+    <link href="/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/xuly.js"></script>
+</head>
+<body style="background-color: #333333;color: white">
+<div class="container">
+<%include menu.ejs%>
+
+    <div id="login_full_box">
+        <div class="row">
+            <div class="col-sm-9">
+                <div class="col-sm-6">
+                    <h3>Đăng nhập</h3>
+                    <%if(acc!==undefined){%>
+                    <input type="text" class="form-control" value="<%=acc.username%>" placeholder="Tài khoản" id="log_username"/><br>
+                    <input type="password" class="form-control" value="<%=acc.password%>" placeholder="Mật khẩu" id="log_password"/><br>
+                    <%}%>
+
+                    <%if(acc===undefined){%>
+                    <input type="text" class="form-control" placeholder="Tài khoản" id="log_username"/><br>
+                    <input type="password" class="form-control" placeholder="Mật khẩu" id="log_password"/><br>
+                    <%}%>
+
+                    <p style="color: red" id="log_notify"></p>
+                    <input type="button" class="btn btn-primary" value="Đăng nhập" id="btnLogin">
+                </div>
+                <div class="col-sm-6">
+                    <h3>Đăng kí</h3>
+                    <input type="text" class="form-control" placeholder="Tài khoản" id="reg_username"/><br>
+                    <input type="password" class="form-control" placeholder="Mật khẩu" id="reg_password"/><br>
+                    <input type="email" class="form-control" placeholder="Email" id="reg_email"/><br>
+                    <input type="text" class="form-control" placeholder="Link facebook" id="reg_linkfb"/><br>
+                    <p style="color: red" id="reg_notify"></p>
+                    <input type="button" class="btn btn-primary" value="Đăng kí" id="btnRegister">
+                </div>
+            </div>
+            <div class="col-sm-3"></div>
+        </div>
+    </div>
+    <div id="main_full_box">
+        <div class="row">
+            <div class="col-sm-9">
+
+                <div><h1 style="text-align: center"><span id="cauhoi"></span> <span id="type"></span></h1></div>
+                <div><h3 style="text-align: center" id="time"></h3></div>
+                <hr>
+                <div class="user-answer-the-question input-group">
+                    <input aria-describedby="btnAnswerQuestion" type="text" id="my-question" placeholder="Câu trả lời của bạn..." class="form-control">
+                    <span  id="btnAnswerQuestion"  style="background-color: green;color: white" class="input-group-addon">Trả lời</span>
+                </div>
+
+                <hr>
+                <h3>Danh sách câu trả lời </h3>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Tài khoản</th>
+                        <th>Câu trả lời</th>
+                    </tr>
+                    </thead>
+                    <tbody id="user-answer">
+
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-3">
+                <div class="row">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading"><i class="fa fa-diamond" aria-hidden="true"></i> Profile <a title="Đăng xuất" class="btn btn-danger" href="/user/logout" id="lgout"><i class="fa fa-sign-out" aria-hidden="true"></i></a></div>
+                        <div class="panel-body" style="color: #0f0f0f">
+                            <p>Tài khoản: <span id="profile-username">
+                                    <% if(acc !== undefined){ %>
+                                    <%= acc.username %>
+                                    <% } %>
+                                </span>
+                            </p>
+                            <p>Điểm: <span id="profile-diem">
+                                    <% if(acc !== undefined){ %>
+                                        <%= acc.diem %>
+                                    <% } %>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="panel panel-primary" >
+                        <div class="panel-heading"><i class="fa fa-users" aria-hidden="true"></i> <span id="numberOfOnline"></span></div>
+                        <div class="panel-body" style="color: #0f0f0f">
+                            <p id="user"></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <hr>
+
+    </div>
+</div>
+<script src="/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+<script src="/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/build/js/custom.min.js"></script>
+</body>
+</html>

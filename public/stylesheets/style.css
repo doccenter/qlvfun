@@ -1,0 +1,16 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+#my-question{
+  padding-left: 10px;
+}
+
+#my-question{
+  padding-right: 10px;
+}
