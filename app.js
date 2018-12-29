@@ -25,10 +25,10 @@ var io = require('socket.io')(server);
 var time = 25;
 var mysql = require('mysql');
 var pool = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'vocubulonline'
+    host: '116.193.76.161',
+    user: 'dbfreefev_qlvfun',
+    password: 'MasterYi01',
+    database: 'dbfreefev_qlvfun'
 });
 var currentQuestion = {};
 
