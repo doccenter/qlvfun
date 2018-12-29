@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 var session = require('express-session');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -20,8 +22,7 @@ app.use('/', indexRouter);
 var listUser = [];
 var listAnswer = [];
 var question = {};
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+
 var time = 25;
 var mysql = require('mysql');
 var pool = mysql.createConnection({
@@ -231,7 +232,7 @@ function copy() {
     listUser = ds;
 }
 
-app.listen(process.env.PORT || '3000');
+server.listen(process.env.PORT || '3000');
 
 
 module.exports = app;
