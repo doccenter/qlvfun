@@ -4,21 +4,43 @@ $(document).ready(function () {
         if (data.data === 'ok') {
             $('#login_full_box').hide();
             $('#main_full_box').show();
+            $('.noacc').hide();
+            $('.acc').show();
             $('#profile-username').html(data.user.username);
             $('#profile-diem').html(data.user.diem);
             $.ajax({url: '/user/login', data: {data: JSON.stringify(data.user)}})
+        } else {
+            $('#log_notify').html('Tài khoản hoặc mật khẩu không đúng.');
         }
     });
+
+    socket.on('server-send-result-register', function (data) {
+        if (data.data === 'ok') {
+            $('#login_full_box').hide();
+            $('#main_full_box').show();
+            $('.noacc').hide();
+            $('.acc').show();
+            $('#profile-username').html(data.user.username);
+            $('#profile-diem').html(data.user.diem);
+            $.ajax({url: '/user/register', data: {data: JSON.stringify(data.user)}})
+        } else {
+            $('#reg_notify').html('Tài khoản đã tồn tại.');
+        }
+    });
+
     var username = $('#log_username').val();
     var password = $('#log_password').val();
     if (username !== '' && password !== '') {
         socket.emit('user-send-login', {username: username, password: password});
+    } else {
+        $('.noacc').show();
+        $('.acc').hide();
     }
 
 
     socket.on('server-send-question', function (question) {
         $('#cauhoi').html(question.content);
-        if (question.type === 'av') {
+        if (question.typequestion === 'av') {
             $('#type').html(' nghĩa là gì ?');
         } else {
             $('#type').html(' trong tiếng anh là gì ?');
@@ -62,7 +84,7 @@ $(document).ready(function () {
                 $('#user').append('<p>' + data.username + '<span style="float: right" class="badge">' + data.diem + '' + '</span></p>');
             }
         }
-        if(listUser.length>1){
+        if (listUser.length > 1) {
             $('#user').append('<a class="btn btn-success" href="/user/online">Xem tất cả</a>');
         }
 
@@ -88,7 +110,11 @@ $(document).ready(function () {
     $('#btnLogin').on('click', function () {
         var username = $('#log_username').val();
         var password = $('#log_password').val();
-        socket.emit('user-send-login', {username: username, password: password});
+        if (username === '' || password === '') {
+            $('#log_notify').html('Tài khoản hoặc mật khẩu không được bỏ trống');
+        } else {
+            socket.emit('user-send-login', {username: username, password: password});
+        }
     });
 
     $('#btnRegister').on('click', function () {
@@ -96,39 +122,42 @@ $(document).ready(function () {
         var password = $('#reg_password').val();
         var email = $('#reg_email').val();
         var linkfb = $('#reg_linkfb').val();
-        socket.emit('user-send-register', {username: username, password: password, email: email, linkfb: linkfb});
-        socket.emit('login', username);
+        if (username === '' || password === '' || email === '' || linkfb === '') {
+            $('#reg_notify').html('Điền đầy đủ các thông tin');
+        } else {
+            socket.emit('user-send-register', {username: username, password: password, email: email, linkfb: linkfb});
+        }
     });
 
 
-    $('#btnRegister').on('click', function () {
-        var username = $('#reg_username').val();
-        var password = $('#reg_password').val();
-        var email = $('#reg_email').val();
-        var linkfb = $('#reg_linkfb').val();
-
-        $.ajax({
-            url: '/user/registry',
-            data: {
-                username: username,
-                password: password,
-                email: email,
-                linkfb: linkfb
-            },
-            success: function (data) {
-                var data1 = data.data;
-                if (data1 === 'ok') {
-                    window.location.reload();
-                }
-                if (data1 === 'fail') {
-                    $('#reg_notify').html('Tài khoản đã tồn tại.');
-                }
-            },
-            error: function (err) {
-            }
-
-        });
-    });
+    // $('#btnRegister').on('click', function () {
+    //     var username = $('#reg_username').val();
+    //     var password = $('#reg_password').val();
+    //     var email = $('#reg_email').val();
+    //     var linkfb = $('#reg_linkfb').val();
+    //
+    //     $.ajax({
+    //         url: '/user/registry',
+    //         data: {
+    //             username: username,
+    //             password: password,
+    //             email: email,
+    //             linkfb: linkfb
+    //         },
+    //         success: function (data) {
+    //             var data1 = data.data;
+    //             if (data1 === 'ok') {
+    //                 window.location.reload();
+    //             }
+    //             if (data1 === 'fail') {
+    //                 $('#reg_notify').html('Tài khoản đã tồn tại.');
+    //             }
+    //         },
+    //         error: function (err) {
+    //         }
+    //
+    //     });
+    // });
 
 });
 

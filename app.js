@@ -95,6 +95,39 @@ setInterval(function () {
         time--;
     }
 }, 1000);
+app.use('/translate', function (req, res, n) {
+    let api = req.query.api;
+    let word = req.query.word;
+    var sql = "SELECT * FROM account where api=?";
+    pool.query(sql, [api], function (e, r, f) {
+        if (r.length === 0) {
+            return res.json({error: 1002});
+        }
+        var number = parseInt(r[0].diem);
+        if (number > 0 && !isNaN(number)) {
+            pool.query("select * from question where typequestion='av' and content=?", [word], function (ee, rr, ff) {
+                if (rr.length === 0) {
+                    return res.json({error: '5555'});
+                }
+                pool.query('update account set diem=? where api=?', [--number, api], function (eee, rrr, fff) {
+                    var us = {};
+                    for (let k = 0; k < listUser.length; k++) {
+                        if (listUser[k].api === api) {
+                            us = listUser[k];
+                            listUser[k].diem -= 1;
+                        }
+                    }
+                    io.sockets.emit('server-send-list-user', listUser.sort((a, b) => {
+                        return b.diem - a.diem;
+                    }));
+                    return res.json(rr[0]);
+                });
+            });
+        } else {
+            return res.json({error: '0000'});
+        }
+    });
+});
 
 io.on('connection', function (socket) {
     io.sockets.emit('server-send-list-user', listUser);
@@ -117,6 +150,42 @@ io.on('connection', function (socket) {
             listUser.push(acc);
             io.sockets.emit('server-send-list-user', listUser);
             socket.emit('server-send-result-login', {data: 'ok', user: acc});
+        });
+    });
+
+    socket.on('user-send-register',function (data) {
+        let username = data.username;
+        let password = data.password;
+        let email = data.email;
+        let linkfb = data.linkfb;
+        let diem = 0;
+        let status = 0;
+        let ip = '';
+        let sdt = '';
+        let diachi = '';
+        let api = Date.now();
+        pool.query('insert into account values (?,?,?,?,?,?,?,?,?,?)', [username, password, email, linkfb, diem, status, ip, sdt, diachi,api], function (error, results, fields) {
+            if (error) {
+                return  socket.emit('server-send-result-register', {data: 'fail', user: undefined});
+            }
+
+            var acc = {
+                username: username,
+                password: password,
+                email: email,
+                linkfb: linkfb,
+                diem: diem,
+                status: status,
+                ip: ip,
+                sdt: sdt,
+                diachi: diachi,
+                api:api
+            };
+
+            socket.username = username;
+            listUser.push(acc);
+            io.sockets.emit('server-send-list-user', listUser);
+            socket.emit('server-send-result-register', {data: 'ok', user: acc});
         });
     });
 
@@ -157,35 +226,9 @@ app.use('/user/login', function (req, res) {
     return res.json({data: 'ok'});
 });
 
-app.use('/user/registry', function (req, res) {
-    let username = req.query.username;
-    let password = req.query.password;
-    let email = req.query.email;
-    let linkfb = req.query.linkfb;
-    let diem = 0;
-    let status = 0;
-    let ip = '';
-    let sdt = '';
-    let diachi = '';
-
-    pool.query('insert into account values (?,?,?,?,?,?,?,?,?)', [username, password, email, linkfb, diem, status, ip, sdt, diachi], function (error, results, fields) {
-        if (error) return res.json({'data': 'fail'});
-
-        var acc = {
-            username: username,
-            password: password,
-            email: email,
-            linkfb: linkfb,
-            diem: diem,
-            status: status,
-            ip: ip,
-            sdt: sdt,
-            diachi: diachi
-        };
-        listUser.push(acc);
-        req.session.acc = acc;
-        return res.status(200).json({data: 'ok'});
-    });
+app.use('/user/register', function (req, res) {
+    req.session.acc = JSON.parse(req.query.data);
+    return res.json({data: 'ok'});
 });
 
 
@@ -202,11 +245,13 @@ app.use('/user/logout', function (req, res) {
     setTimeout(function () {
         req.session.acc = undefined;
         res.redirect('/');
-    }, 1000);
+    }, 200);
 });
 
 app.use('/user/online', function (req, res) {
-    res.render('online', {dsUser: listUser});
+    var acc = req.session.acc;
+    if(acc === undefined) return res.redirect('/');
+    res.render('online', {dsUser: listUser,acc: acc,dangxem: 'online'});
 });
 
 app.use('/bangxephang', function (req, res) {
@@ -214,10 +259,11 @@ app.use('/bangxephang', function (req, res) {
         if (error) return res.json({'data': 'fail'});
         var dsUsername = [];
         listUser.forEach(function (data) {
-           dsUsername.push(data.username);
+            dsUsername.push(data.username);
         });
-
-        res.render('rank', {dsUser: results, dsOnline: dsUsername});
+        var acc = req.session.acc;
+        if(acc === undefined) return res.redirect('/');
+        res.render('rank', {dsUser: results, dsOnline: dsUsername,acc: acc,dangxem: 'rank'});
     });
 
 });

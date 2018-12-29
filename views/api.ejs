@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Danh sách thành viên online</title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Datatables -->
+    <link href="/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <style>
+        tr > td {
+            color: white;
+        }
+    </style>
+
+</head>
+<body style="background-color: #333333;color: white">
+<div class="container">
+    <% include menu.ejs %>
+    <div class="row">
+        <div class="col-sm-9">
+            <h1>Hướng dẫn sử dụng API của chúng tôi.</h1>
+            <h3>I. Chức năng</h3>
+            <p>- Chúng tôi cung cấp bộ API chỉ để dịch nghĩa Anh-Việt hoặc Việt-Anh</p>
+            <p>- Số lượng từ vựng không đảm bảo dịch được tất cả từ</p>
+            <p>- Tiêu hao 1 điểm với 1 lần gọi API này.</p>
+            <h3>II. Cách sử dụng</h3>
+            <p>- Gọi 1 get request tới:
+                https://qlvfun.com/translate?api={your-api}&word={your-word}</p>
+            <p>- Trong đó:</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;+ your-api: Là mã bạn sẽ thấy ở bên phải</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;+ your-word: Từ bạn muốn dịch</p>
+
+            <h3>III. Kết quả</h3>
+            <p>- Kết quả trả về dạng JSON như sau:</p>
+            <p style="color: red">&nbsp;&nbsp;&nbsp;&nbsp;{word:'you-word',mean:'word-translated', type:'verb',
+                spelling: 'Spelling of
+                word(english)', audioSpelling:'File for spelling.mp3'}</p>
+            <p>- Lỗi như sau</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp; {error : codeError}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;+ Trong đó codeError sẽ được hiển thị ở bảng bên dưới</p>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Mã</th>
+                    <th>Vì sao lại thế</th>
+                </tr>
+                </thead>
+                <tbody id="user-answer">
+                    <tr>
+                        <td>1002</td>
+                        <td>Your api không đúng</td>
+                    </tr>
+
+                    <tr>
+                        <td>5555</td>
+                        <td>Từ vựng này không tồn tại</td>
+                    </tr>
+
+                    <tr>
+                        <td>0000</td>
+                        <td>FunPoint của bạn không đủ</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div  class="col-sm-3">
+            <h1>API của bạn</h1>
+            <h3 style="color: white"><%=acc.api%></h3>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
