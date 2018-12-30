@@ -23,7 +23,7 @@ var listUser = [];
 var listAnswer = [];
 var question = {};
 
-var time = 25;
+var time = 20;
 var mysql = require('mysql');
 var pool = mysql.createConnection({
     host: '116.193.76.161',
@@ -35,12 +35,12 @@ var currentQuestion = {};
 
 setInterval(function () {
 
-    if (time >= 21) {
+    if (time >= 16) {
         time--;
         pool.query('SELECT * FROM question ORDER BY RAND() LIMIT 1;', function (error, results, fields) {
             currentQuestion = results[0];
         });
-    } else if (time === 20) {
+    } else if (time === 15) {
         listAnswer = [];
         io.sockets.emit('server-send-answer', []);
         io.sockets.emit('server-send-question', currentQuestion);
@@ -81,7 +81,7 @@ setInterval(function () {
             });
             io.sockets.emit('server-send-question', currentQuestion);
             io.sockets.emit('server-send-answer-final', ans);
-            time = 25;
+            time = 20;
 
 
         } else {
@@ -90,11 +90,11 @@ setInterval(function () {
                 username: 'no',
                 answer: currentQuestion.answer
             });
-            time = 25;
+            time = 20;
         }
 
 
-    } else if (time <= 20) {
+    } else if (time <= 15) {
         io.sockets.emit('server-send-question', currentQuestion);
         io.sockets.emit('server-send-time', time);
         time--;
