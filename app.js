@@ -51,11 +51,11 @@ setInterval(function () {
         var split = currentQuestion.answer.split(',');
         var ds = [];
         split.forEach(function (data) {
-            ds.push(data);
+            ds.push(data.trim());
         });
         for (var a = 0; a < listAnswer.length; a++) {
             ans = listAnswer[a];
-            if (ds.indexOf(ans.answer)>-1) {
+            if (ds.indexOf(ans.answer.trim())>-1) {
                 check = true;
                 break;
             }
