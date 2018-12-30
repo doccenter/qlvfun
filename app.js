@@ -48,9 +48,14 @@ setInterval(function () {
     } else if (time === 0) {
         var check = false;
         var ans;
+        var split = currentQuestion.answer.split(',');
+        var ds = [];
+        split.forEach(function (data) {
+            ds.push(data);
+        });
         for (var a = 0; a < listAnswer.length; a++) {
             ans = listAnswer[a];
-            if (ans.answer === currentQuestion.answer) {
+            if (ds.indexOf(ans.answer)>-1) {
                 check = true;
                 break;
             }
@@ -153,7 +158,7 @@ io.on('connection', function (socket) {
         });
     });
 
-    socket.on('user-send-register',function (data) {
+    socket.on('user-send-register', function (data) {
         let username = data.username;
         let password = data.password;
         let email = data.email;
@@ -164,9 +169,9 @@ io.on('connection', function (socket) {
         let sdt = '';
         let diachi = '';
         let api = Date.now();
-        pool.query('insert into account values (?,?,?,?,?,?,?,?,?,?)', [username, password, email, linkfb, diem, status, ip, sdt, diachi,api], function (error, results, fields) {
+        pool.query('insert into account values (?,?,?,?,?,?,?,?,?,?)', [username, password, email, linkfb, diem, status, ip, sdt, diachi, api], function (error, results, fields) {
             if (error) {
-                return  socket.emit('server-send-result-register', {data: 'fail', user: undefined});
+                return socket.emit('server-send-result-register', {data: 'fail', user: undefined});
             }
 
             var acc = {
@@ -179,7 +184,7 @@ io.on('connection', function (socket) {
                 ip: ip,
                 sdt: sdt,
                 diachi: diachi,
-                api:api
+                api: api
             };
 
             socket.username = username;
@@ -250,8 +255,8 @@ app.use('/user/logout', function (req, res) {
 
 app.use('/user/online', function (req, res) {
     var acc = req.session.acc;
-    if(acc === undefined) return res.redirect('/');
-    res.render('online', {dsUser: listUser,acc: acc,dangxem: 'online'});
+    if (acc === undefined) return res.redirect('/');
+    res.render('online', {dsUser: listUser, acc: acc, dangxem: 'online'});
 });
 
 app.use('/bangxephang', function (req, res) {
@@ -262,8 +267,8 @@ app.use('/bangxephang', function (req, res) {
             dsUsername.push(data.username);
         });
         var acc = req.session.acc;
-        if(acc === undefined) return res.redirect('/');
-        res.render('rank', {dsUser: results, dsOnline: dsUsername,acc: acc,dangxem: 'rank'});
+        if (acc === undefined) return res.redirect('/');
+        res.render('rank', {dsUser: results, dsOnline: dsUsername, acc: acc, dangxem: 'rank'});
     });
 
 });
