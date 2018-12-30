@@ -48,7 +48,7 @@ setInterval(function () {
     } else if (time === 0) {
         var check = false;
         var ans;
-        var split = currentQuestion.answer.split(',');
+        var split = currentQuestion.answer.replace(";", ",").split(',');
         var ds = [];
         split.forEach(function (data) {
             ds.push(data.trim());
