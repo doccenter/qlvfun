@@ -148,7 +148,7 @@ io.on('connection', function (socket) {
             if (error) return res.status(500).json({data: 'fail'});
             var length = results.length;
             if (length === 0) {
-                socket.emit('server-send-result-login', {data: 'fail', user: undefined});
+               return socket.emit('server-send-result-login', {data: 'fail', user: undefined});
             }
             var acc = results[0];
             socket.username = username;
