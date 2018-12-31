@@ -72,7 +72,7 @@ $(document).ready(function () {
         $('#id').html(question.id);
         $('#spelling').html(question.spelling);
         $('#typeword').html(question.typeword);
-        $('#fileAudio').attr('src', 'http://audio.oxforddictionaries.com/en/mp3/eat_gb_1.mp3');
+        $('#fileAudio').attr('src', question.audiofile);
         if (question.typequestion === 'av') {
             $('#type').html(' nghĩa là gì ?');
         } else {
@@ -110,16 +110,22 @@ $(document).ready(function () {
         $('#user').empty();
         $('#numberOfOnline').html(listUser.length + ' người đang online');
         for (let b = 0; b < listUser.length; b++) {
-            if (b <= 1) {
+            if (b <= 10) {
                 let data = listUser[b];
                 if ($('#profile-username').html() === data.username) {
                     $('#profile-diem').html(data.diem);
-                    $.ajax({url: '/user/update', data: {data: JSON.stringify(data)}})
+                    $.ajax({url: '/user/update', data: {data: JSON.stringify(data)}});
+
                 }
+                if ($('#profile-username').html() === data.username) {
                 $('#user').append('<p>' + data.username + '<span style="float: right" class="badge">' + data.diem + '' + '</span></p>');
+
+                }else{
+                    $('#user').append('<p><b style="color: red">' + data.username + '<span style="float: right" class="badge">' + data.diem + '' + '</span></b> </p>');
+                }
             }
         }
-        if (listUser.length > 1) {
+        if (listUser.length > 10) {
             $('#user').append('<a class="btn btn-success" href="/user/online">Xem tất cả</a>');
         }
 
@@ -176,45 +182,4 @@ $(document).ready(function () {
             socket.emit('user-send-register', {username: username, password: password, email: email, linkfb: linkfb});
         }
     });
-
-
-    // $('#btnRegister').on('click', function () {
-    //     var username = $('#reg_username').val();
-    //     var password = $('#reg_password').val();
-    //     var email = $('#reg_email').val();
-    //     var linkfb = $('#reg_linkfb').val();
-    //
-    //     $.ajax({
-    //         url: '/user/registry',
-    //         data: {
-    //             username: username,
-    //             password: password,
-    //             email: email,
-    //             linkfb: linkfb
-    //         },
-    //         success: function (data) {
-    //             var data1 = data.data;
-    //             if (data1 === 'ok') {
-    //                 window.location.reload();
-    //             }
-    //             if (data1 === 'fail') {
-    //                 $('#reg_notify').html('Tài khoản đã tồn tại.');
-    //             }
-    //         },
-    //         error: function (err) {
-    //         }
-    //
-    //     });
-    // });
-
 });
-
-// $('#emit').on('click', function () {
-//     socket.emit('send-answer', $('#data').val());
-// });
-// socket.on('server-send-question', function (data) {
-//     $('#ddd').html(data);
-// });
-// socket.on('server-send-question-2', function (data) {
-//     $('#ddd2').html(data);
-// });

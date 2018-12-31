@@ -70,8 +70,8 @@
                 <div class="user-answer-the-question input-group">
                     <span style="background-color: #333333;color: white" class="input-group-addon">Câu trả lời</span>
                     <input aria-describedby="btnAnswerQuestion" type="text" id="my-question" placeholder="Câu trả lời của bạn..." class="form-control">
-                    <span  id="btnAnswerQuestion"  style="background-color: green;color: white" class="input-group-addon">Trả lời</span>
-                    <span  id="btnLamMoi"  style="background-color: black;color: white" class="input-group-addon">Làm mới</span>
+                    <span  id="btnAnswerQuestion"  style="background-color: green;color: white" class="input-group-addon"><i class="fa fa-paper-plane" aria-hidden="true"></i></span>
+                    <span  id="btnLamMoi"  style="background-color: black;color: white" class="input-group-addon"><i class="fa fa-repeat" aria-hidden="true"></i></span>
                 </div>
                 <hr>
 
@@ -82,7 +82,12 @@
                             <button class="btn btn-success" id="btnPlay"><i class="fa fa-fast-forward" aria-hidden="true"></i> Nghe thử</button>
                          <button class="btn btn-danger"  id="btnBaoLoi"><i class="fa fa-info-circle" aria-hidden="true"></i> Báo cáo 1 số sai lệch về từ này</button>
                  </div>
-
+                <hr>
+                <div id="huongdan">
+                    <h3>Hướng dẫn sử dụng</h3>
+                            <p>- Trả lời đúng và nhanh nhất được + 1 <a href="#">điểm</a></p>
+                            <p>- Với PC sử dụng phím tắt: ESC để làm mới câu trả lời, Enter để trả lời</p>
+                </div>
 
                 <hr>
                 <h3>Danh sách câu trả lời </h3>
@@ -101,17 +106,8 @@
             </div>
             <div class="col-sm-3">
                 <div class="row">
-                    <div class="panel panel-primary" >
-                        <div class="panel-heading"><i class="fa fa-question" aria-hidden="true"></i> Hướng dẫn</div>
-                        <div class="panel-body" style="color: #0f0f0f">
-                            <p>- Trả lời đúng và nhanh nhất được + 1 <a href="#">điểm</a></p>
-                            <p>- Với PC sử dụng phím tắt: ESC để làm mới câu trả lời, Enter để trả lời</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
                     <div class="panel panel-primary">
-                        <div class="panel-heading"><i class="fa fa-diamond" aria-hidden="true"></i> Profile <a title="Đăng xuất" class="btn btn-danger" href="/user/logout" id="lgout"><i class="fa fa-sign-out" aria-hidden="true"></i></a></div>
+                        <div class="panel-heading"><i class="fa fa-diamond" aria-hidden="true"></i> Profile <a data-toggle="tooltip" data-placement="top" title="Đăng xuất" class="btn btn-danger" href="/user/logout" id="lgout"><i class="fa fa-sign-out" aria-hidden="true"></i></a></div>
                         <div class="panel-body" style="color: #0f0f0f">
                             <p>Tài khoản: <span id="profile-username">
                                     <% if(acc !== undefined){ %>

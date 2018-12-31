@@ -269,7 +269,7 @@ app.use('/user/online', function (req, res) {
 });
 
 app.use('/bangxephang', function (req, res) {
-    pool.query('select * from account order by diem asc ', function (error, results, fields) {
+    pool.query('select * from account order by diem asc limit 1000 ', function (error, results, fields) {
         if (error) return res.json({'data': 'fail'});
         var dsUsername = [];
         listUser.forEach(function (data) {
