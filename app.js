@@ -24,8 +24,8 @@ var listAnswer = [];
 var question = {};
 
 var time = 20;
-var mysql = require('mysql');
-var pool = mysql.createConnection({
+const mysql = require('mysql');
+const pool = mysql.createConnection({
     host: '116.193.76.161',
     user: 'dbfreefev_qlvfun',
     password: 'MasterYi01',
@@ -55,7 +55,7 @@ setInterval(function () {
         });
         for (var a = 0; a < listAnswer.length; a++) {
             ans = listAnswer[a];
-            if (ds.indexOf(ans.answer.trim())>-1) {
+            if (ds.indexOf(ans.answer.trim()) > -1) {
                 check = true;
                 break;
             }
@@ -140,6 +140,15 @@ io.on('connection', function (socket) {
         console.log('Có gửi');
         io.sockets.emit('server-send-list-user', listUser);
     });
+
+    socket.on('user-send-report', function (data) {
+        var id = Date.now();
+        pool.query('insert into report values (?,?)', [id, data], function (error, results, fields) {
+            if (error) return socket.emit('server-send-result-login', 'fail');
+            socket.emit('server-send-report', 'ok');
+        });
+    });
+
     socket.on('user-send-login', function (data) {
         let username = data.username;
         let password = data.password;
@@ -148,7 +157,7 @@ io.on('connection', function (socket) {
             if (error) return res.status(500).json({data: 'fail'});
             var length = results.length;
             if (length === 0) {
-               return socket.emit('server-send-result-login', {data: 'fail', user: undefined});
+                return socket.emit('server-send-result-login', {data: 'fail', user: undefined});
             }
             var acc = results[0];
             socket.username = username;
@@ -284,7 +293,7 @@ function copy() {
 }
 
 server.listen(process.env.PORT || '3000');
-
+module.exports.pool = pool;
 
 module.exports = app;
 

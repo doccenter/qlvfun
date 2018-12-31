@@ -36,8 +36,6 @@
                 <th>Trạng thái</th>
             </tr>
             </thead>
-
-
             <tbody>
             <% dsUser.forEach(function (data) { %>
                 <tr>
@@ -45,11 +43,11 @@
                     <td><%= data.diem %></td>
                     <td><%= data.sdt %></td>
                     <td><%= data.diachi %></td>
-                    <% if(data.username.indexOf(dsOnline)>-1){ %>
+                    <%if(dsOnline.indexOf(data.username)>-1){ %>
                         <td>Online</td>
                     <% } %>
 
-                    <% if(data.username.indexOf(dsOnline)===-1){ %>
+                    <% if(dsOnline.indexOf(data.username)===-1){ %>
                         <td>Offline</td>
                     <% } %>
 

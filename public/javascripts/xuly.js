@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     var socket = io('/');
     socket.on('server-send-result-login', function (data) {
         if (data.data === 'ok') {
@@ -12,6 +13,21 @@ $(document).ready(function () {
         } else {
             $('#log_notify').html('Tài khoản hoặc mật khẩu không đúng.');
         }
+    });
+    $('#btnPlay').on('click', function () {
+        enableAutoplay();
+
+    });
+
+    $(document).on('keyup', function (e) {
+        if (e.keyCode === 27) { // ctrl + x
+            $('#btnLamMoi').click();
+        }
+
+    });
+
+    $('#btnLamMoi').on('click', function () {
+        $('#my-question').val('');
     });
 
     socket.on('server-send-result-register', function (data) {
@@ -37,9 +53,26 @@ $(document).ready(function () {
         $('.acc').hide();
     }
 
+    socket.on('server-send-report', function (data) {
+        if (data === 'ok') {
+            $('#btnBaoLoi').html('<i class="fa fa-info-circle" aria-hidden="true"></i> Đã gửi lỗi thành công');
+            $('#btnBaoLoi').attr('disabled', 'disabled');
+        } else {
+            $('#btnBaoLoi').html('<i class="fa fa-info-circle" aria-hidden="true"></i> Có lỗi xảy ra !!!');
+            $('#btnBaoLoi').attr('disabled', 'disabled');
+        }
+    });
+
+    $('#btnBaoLoi').on('click', function () {
+        socket.emit('user-send-report', $('#id').html());
+    });
 
     socket.on('server-send-question', function (question) {
         $('#cauhoi').html(question.content);
+        $('#id').html(question.id);
+        $('#spelling').html(question.spelling);
+        $('#typeword').html(question.typeword);
+        $('#fileAudio').attr('src', 'http://audio.oxforddictionaries.com/en/mp3/eat_gb_1.mp3');
         if (question.typequestion === 'av') {
             $('#type').html(' nghĩa là gì ?');
         } else {
@@ -49,6 +82,8 @@ $(document).ready(function () {
 
     socket.on('server-send-answer-final', function (userQuestion) {
         $('#my-question').val('');
+        $('#btnBaoLoi').removeAttr('disabled');
+        $('#btnBaoLoi').html('<i class="fa fa-info-circle" aria-hidden="true"></i> Báo cáo 1 số sai lệch về từ này');
         if (userQuestion.username === 'no') {
             $('#time').html('Không ai trả lời đúng câu hỏi này. Đáp án là: ' + userQuestion.answer);
 
@@ -106,6 +141,17 @@ $(document).ready(function () {
         }
     });
 
+    $('#formLogin').on('keyup',function (e) {
+        if(e.keyCode === 13){
+            $('#btnLogin').click();
+        }
+    });
+
+    $('#formReg').on('keyup',function (e) {
+        if(e.keyCode === 13){
+            $('#btnRegister').click();
+        }
+    });
 
     $('#btnLogin').on('click', function () {
         var username = $('#log_username').val();
@@ -124,6 +170,8 @@ $(document).ready(function () {
         var linkfb = $('#reg_linkfb').val();
         if (username === '' || password === '' || email === '' || linkfb === '') {
             $('#reg_notify').html('Điền đầy đủ các thông tin');
+        } else if (username.length > 12) {
+            $('#reg_notify').html('Tài khoản không lớn hơn 10 kí tự');
         } else {
             socket.emit('user-send-register', {username: username, password: password, email: email, linkfb: linkfb});
         }

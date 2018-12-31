@@ -25,28 +25,32 @@
         <div class="row">
             <div class="col-sm-9">
                 <div class="col-sm-6">
-                    <h3>Đăng nhập</h3>
-                    <%if(acc!==undefined){%>
-                    <input type="text" class="form-control" value="<%=acc.username%>" placeholder="Tài khoản" id="log_username"/><br>
-                    <input type="password" class="form-control" value="<%=acc.password%>" placeholder="Mật khẩu" id="log_password"/><br>
-                    <%}%>
+                    <div id="formLogin">
+                        <h3>Đăng nhập</h3>
+                        <%if(acc!==undefined){%>
+                        <input type="text" class="form-control" value="<%=acc.username%>" placeholder="Tài khoản" id="log_username"/><br>
+                        <input type="password" class="form-control" value="<%=acc.password%>" placeholder="Mật khẩu" id="log_password"/><br>
+                        <%}%>
 
-                    <%if(acc===undefined){%>
-                    <input type="text" class="form-control" placeholder="Tài khoản" id="log_username"/><br>
-                    <input type="password" class="form-control" placeholder="Mật khẩu" id="log_password"/><br>
-                    <%}%>
+                        <%if(acc===undefined){%>
+                            <input type="text" class="form-control" placeholder="Tài khoản" id="log_username"/><br>
+                            <input type="password" class="form-control" placeholder="Mật khẩu" id="log_password"/><br>
+                        <%}%>
 
-                    <p style="color: red" id="log_notify"></p>
-                    <input type="button" class="btn btn-primary" value="Đăng nhập" id="btnLogin">
+                        <p style="color: red" id="log_notify"></p>
+                        <input type="button" class="btn btn-primary" value="Đăng nhập" id="btnLogin">
+                    </div>
                 </div>
                 <div class="col-sm-6">
-                    <h3>Đăng kí</h3>
-                    <input type="text" class="form-control" placeholder="Tài khoản" id="reg_username"/><br>
-                    <input type="password" class="form-control" placeholder="Mật khẩu" id="reg_password"/><br>
-                    <input type="email" class="form-control" placeholder="Email" id="reg_email"/><br>
-                    <input type="text" class="form-control" placeholder="Link facebook" id="reg_linkfb"/><br>
-                    <p style="color: red" id="reg_notify"></p>
-                    <input type="button" class="btn btn-primary" value="Đăng kí" id="btnRegister">
+                    <div id="formReg">
+                        <h3>Đăng kí</h3>
+                        <input type="text" class="form-control" placeholder="Tài khoản" id="reg_username"/><br>
+                        <input type="password" class="form-control" placeholder="Mật khẩu" id="reg_password"/><br>
+                        <input type="email" class="form-control" placeholder="Email" id="reg_email"/><br>
+                        <input type="text" class="form-control" placeholder="Link facebook" id="reg_linkfb"/><br>
+                        <p style="color: red" id="reg_notify"></p>
+                        <input type="button" class="btn btn-primary" value="Đăng kí" id="btnRegister">
+                    </div>
                 </div>
             </div>
             <div class="col-sm-3"></div>
@@ -55,14 +59,30 @@
     <div id="main_full_box">
         <div class="row">
             <div class="col-sm-9">
-
+                <p id="id" style="display: none"></p>
                 <div><h1 style="text-align: center"><span id="cauhoi"></span> <span id="type"></span></h1></div>
+                <div><h3 style="text-align: center" id="spelling"></h3></div>
+                <div><h3 style="text-align: center" id="typeword"></h3></div>
+
                 <div><h3 style="text-align: center" id="time"></h3></div>
+
                 <hr>
                 <div class="user-answer-the-question input-group">
+                    <span style="background-color: #333333;color: white" class="input-group-addon">Câu trả lời</span>
                     <input aria-describedby="btnAnswerQuestion" type="text" id="my-question" placeholder="Câu trả lời của bạn..." class="form-control">
                     <span  id="btnAnswerQuestion"  style="background-color: green;color: white" class="input-group-addon">Trả lời</span>
+                    <span  id="btnLamMoi"  style="background-color: black;color: white" class="input-group-addon">Làm mới</span>
                 </div>
+                <hr>
+
+                <div id="boxAudio">
+                        <audio controls id="myAudio" style="display: none">
+                         <source id="fileAudio" src="#" type="audio/mpeg">
+                        </audio>
+                            <button class="btn btn-success" id="btnPlay"><i class="fa fa-fast-forward" aria-hidden="true"></i> Nghe thử</button>
+                         <button class="btn btn-danger"  id="btnBaoLoi"><i class="fa fa-info-circle" aria-hidden="true"></i> Báo cáo 1 số sai lệch về từ này</button>
+                 </div>
+
 
                 <hr>
                 <h3>Danh sách câu trả lời </h3>
@@ -80,6 +100,15 @@
                 </table>
             </div>
             <div class="col-sm-3">
+                <div class="row">
+                    <div class="panel panel-primary" >
+                        <div class="panel-heading"><i class="fa fa-question" aria-hidden="true"></i> Hướng dẫn</div>
+                        <div class="panel-body" style="color: #0f0f0f">
+                            <p>- Trả lời đúng và nhanh nhất được + 1 <a href="#">điểm</a></p>
+                            <p>- Với PC sử dụng phím tắt: ESC để làm mới câu trả lời, Enter để trả lời</p>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="panel panel-primary">
                         <div class="panel-heading"><i class="fa fa-diamond" aria-hidden="true"></i> Profile <a title="Đăng xuất" class="btn btn-danger" href="/user/logout" id="lgout"><i class="fa fa-sign-out" aria-hidden="true"></i></a></div>
@@ -122,8 +151,15 @@
 <script src="/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
 <script src="/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
 <script src="/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script>
+    var x = document.getElementById("myAudio");
 
-<!-- Custom Theme Scripts -->
+    function enableAutoplay() {
+        x.autoplay = true;
+        x.load();
+    }
+
+    </script>
 <script src="/build/js/custom.min.js"></script>
 </body>
 </html>

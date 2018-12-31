@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Danh sách thành viên online</title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Datatables -->
+    <link href="/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <style>
+        tr > td {
+            color: white;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $('.download').on('click', function () {
+                var id = this.id;
+                var diem = this.name;
+                $.ajax({
+                    url: '/download',
+                    data: {
+                        id: id,
+                        diem: diem
+                    },
+                    success: function (data) {
+                        var res = data.data;
+                        if (res === 'fail') {
+                            alert('Đã xảy ra lỗi');
+                        } else if (res === 'not-enough') {
+                            alert('Không đủ điểm để tải.');
+                        } else {
+                            window.location.href = res;
+                        }
+                    },
+                    error: function (err) {
+
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body style="background-color: #333333;color: white">
+<div class="container">
+    <% include menu.ejs %>
+    <div align="center" class="row">
+        <h3>Đây chỉ là dữ liệu demo nhưng trừ điểm thật</h3>
+    </div>
+    <div class="row">
+        <% dsTaiLieu.forEach(function (tailieu) { %>
+        <div class="col-sm-6 col-md-4 col-lg-3" >
+            <div class="thumbnail" style="background-color: #0f0f0f">
+                <img src="<%= tailieu.hinhanh %>" alt="<%= tailieu.ten %>">
+                <div class="caption" style="color: white">
+                    <h5><%= tailieu.ten %></h5>
+                    <p><a href="#" name="<%=tailieu.diem%>" id="<%=tailieu.id%>" class="btn btn-success download" role="button"><i class="fa fa-download" aria-hidden="true"></i> Tải xuống</a></p>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+
+    </div>
+</div>
+</body>
+</html>
