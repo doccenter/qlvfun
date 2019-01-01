@@ -62,7 +62,7 @@ setInterval(function () {
         }
         if (check) {
             var us = {};
-            for (let k = 0; k < listUser.length; k++) {
+            for (var k = 0; k < listUser.length; k++) {
                 if (listUser[k].username === ans.username) {
                     us = listUser[k];
                 }
@@ -70,7 +70,7 @@ setInterval(function () {
 
             us.diem = us.diem + 1;
             pool.query('update account set diem=? where username=?', [us.diem, ans.username], function (e, r, f) {
-                for (let k = 0; k < listUser.length; k++) {
+                for (var k = 0; k < listUser.length; k++) {
                     if (listUser[k].username === ans.username) {
                         listUser[k].diem = us.diem;
                         io.sockets.emit('server-send-list-user', listUser.sort((a, b) => {
@@ -101,8 +101,8 @@ setInterval(function () {
     }
 }, 1000);
 app.use('/translate', function (req, res, n) {
-    let api = req.query.api;
-    let word = req.query.word;
+    var api = req.query.api;
+    var word = req.query.word;
     var sql = "SELECT * FROM account where api=?";
     pool.query(sql, [api], function (e, r, f) {
         if (r.length === 0) {
@@ -116,7 +116,7 @@ app.use('/translate', function (req, res, n) {
                 }
                 pool.query('update account set diem=? where api=?', [--number, api], function (eee, rrr, fff) {
                     var us = {};
-                    for (let k = 0; k < listUser.length; k++) {
+                    for (var k = 0; k < listUser.length; k++) {
                         if (listUser[k].api === api) {
                             us = listUser[k];
                             listUser[k].diem -= 1;
@@ -150,8 +150,8 @@ io.on('connection', function (socket) {
     });
 
     socket.on('user-send-login', function (data) {
-        let username = data.username;
-        let password = data.password;
+        var username = data.username;
+        var password = data.password;
 
         pool.query('SELECT * FROM account WHERE username=? and password=?', [username, password], function (error, results, fields) {
             if (error) return res.status(500).json({data: 'fail'});
@@ -168,16 +168,16 @@ io.on('connection', function (socket) {
     });
 
     socket.on('user-send-register', function (data) {
-        let username = data.username;
-        let password = data.password;
-        let email = data.email;
-        let linkfb = data.linkfb;
-        let diem = 0;
-        let status = 0;
-        let ip = '';
-        let sdt = '';
-        let diachi = '';
-        let api = Date.now();
+        var username = data.username;
+        var password = data.password;
+        var email = data.email;
+        var linkfb = data.linkfb;
+        var diem = 0;
+        var status = 0;
+        var ip = '';
+        var sdt = '';
+        var diachi = '';
+        var api = Date.now();
         pool.query('insert into account values (?,?,?,?,?,?,?,?,?,?)', [username, password, email, linkfb, diem, status, ip, sdt, diachi, api], function (error, results, fields) {
             if (error) {
                 return socket.emit('server-send-result-register', {data: 'fail', user: undefined});
@@ -210,9 +210,9 @@ io.on('connection', function (socket) {
 
     socket.on('disconnect', function () {
         if (listUser.length > 0) {
-            let username = socket.username;
-            let v = -1;
-            for (let i = 0; i < listUser.length; i++) {
+            var username = socket.username;
+            var v = -1;
+            for (var i = 0; i < listUser.length; i++) {
                 if (listUser[i].username === username) {
                     v = i;
                 }

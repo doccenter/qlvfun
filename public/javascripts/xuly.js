@@ -109,9 +109,9 @@ $(document).ready(function () {
     socket.on('server-send-list-user', function (listUser) {
         $('#user').empty();
         $('#numberOfOnline').html(listUser.length + ' người đang online');
-        for (let b = 0; b < listUser.length; b++) {
+        for (var b = 0; b < listUser.length; b++) {
             if (b <= 10) {
-                let data = listUser[b];
+                var data = listUser[b];
                 if ($('#profile-username').html() === data.username) {
                     $('#profile-diem').html(data.diem);
                     $.ajax({url: '/user/update', data: {data: JSON.stringify(data)}});

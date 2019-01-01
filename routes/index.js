@@ -30,7 +30,7 @@ router.get('/download', function (req, res, next) {
     if (acc === undefined) return res.json({data: 'fail'});
     app.pool.query('select * from account where username=?', [acc.username], function (e, r, d) {
         if (e) return res.json({data: 'fail'});
-        let account = r[0];
+        var account = r[0];
         var diemOld = account.diem;
         if (diemOld < diem) {
             return res.json({data: 'not-enough'});
