@@ -20,7 +20,10 @@
 <body style="background-color: #333333;color: white">
 <div class="container">
 <%include menu.ejs%>
-
+    <div style="display: none" id="ok" class="alert alert-danger alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong id="error-server"></strong>
+        </div>
     <div id="login_full_box">
         <div class="row">
             <div class="col-sm-9">

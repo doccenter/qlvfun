@@ -31,15 +31,15 @@ const pool = mysql.createConnection({
     database: 'dbfreefev_qlvfun'
 });
 var currentQuestion = {};
-app.use('/.well-known/acme-challenge/401H6TBFO33Vy00C-Y_NMbnFRCl_wkDGe2yqKuPevus',function (req, res) {
-   res.send('401H6TBFO33Vy00C-Y_NMbnFRCl_wkDGe2yqKuPevus.ZxPG_F-AVKAeDpOj6E80APAL5PFx_150t7-21AzpjKE');
+app.use('/.well-known/acme-challenge/401H6TBFO33Vy00C-Y_NMbnFRCl_wkDGe2yqKuPevus', function (req, res) {
+    res.send('401H6TBFO33Vy00C-Y_NMbnFRCl_wkDGe2yqKuPevus.ZxPG_F-AVKAeDpOj6E80APAL5PFx_150t7-21AzpjKE');
 });
 
-app.use('/.well-known/acme-challenge/ybO-YRulhaN32F1GymLlvB6xcVE05b_jTk4W29FrN3g',function (req, res) {
+app.use('/.well-known/acme-challenge/ybO-YRulhaN32F1GymLlvB6xcVE05b_jTk4W29FrN3g', function (req, res) {
     res.send('ybO-YRulhaN32F1GymLlvB6xcVE05b_jTk4W29FrN3g.ZxPG_F-AVKAeDpOj6E80APAL5PFx_150t7-21AzpjKE');
 });
 
-const  a = setInterval(function () {
+const a = setInterval(function () {
 
     if (time >= 11) {
         time--;
@@ -156,19 +156,36 @@ io.on('connection', function (socket) {
     socket.on('user-send-login', function (data) {
         var username = data.username;
         var password = data.password;
+        var isExist = false;
+        console.log(username);
+        console.log(listUser);
+        for (let a = 0; a < listUser.length; a++) {
+            if (listUser[a].username === username)
+                isExist = true;
+        }
 
-        pool.query('SELECT * FROM account WHERE username=? and password=?', [username, password], function (error, results, fields) {
-            if (error) return res.status(500).json({data: 'fail'});
-            var length = results.length;
-            if (length === 0) {
-                return socket.emit('server-send-result-login', {data: 'fail', user: undefined});
-            }
-            var acc = results[0];
-            socket.username = username;
-            listUser.push(acc);
-            io.sockets.emit('server-send-list-user', listUser);
-            socket.emit('server-send-result-login', {data: 'ok', user: acc});
-        });
+
+        if (isExist) {
+            io.sockets.emit('server-send-error', {
+                data: 'error',
+                'content': 'Có người đăng nhập vào tài khoản của bạn. Vui lòng đăng xuất nếu không phải bạn',
+                'username': username
+            });
+            socket.emit('server-send-result-login', {data: 'exist'});
+        } else {
+            pool.query('SELECT * FROM account WHERE username=? and password=?', [username, password], function (error, results, fields) {
+                if (error) return res.status(500).json({data: 'fail'});
+                var length = results.length;
+                if (length === 0) {
+                    return socket.emit('server-send-result-login', {data: 'fail', user: undefined});
+                }
+                var acc = results[0];
+                socket.username = username;
+                listUser.push(acc);
+                io.sockets.emit('server-send-list-user', listUser);
+                socket.emit('server-send-result-login', {data: 'ok', user: acc});
+            });
+        }
     });
 
     socket.on('user-send-register', function (data) {
@@ -292,6 +309,7 @@ function copy() {
     });
     listUser = ds;
 }
+
 server.listen(process.env.PORT || '3000');
 
 module.exports.pool = pool;

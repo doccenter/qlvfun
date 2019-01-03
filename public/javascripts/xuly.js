@@ -10,6 +10,8 @@ $(document).ready(function () {
             $('#profile-username').html(data.user.username);
             $('#profile-diem').html(data.user.diem);
             $.ajax({url: '/user/login', data: {data: JSON.stringify(data.user)}})
+        } else if (data.data === 'exist') {
+            $('#log_notify').html('Tài khoản này đang online. Nếu cho rằng ai đang sử dụng tài khoản của bạn. Hãy cho chúng tôi biết');
         } else {
             $('#log_notify').html('Tài khoản hoặc mật khẩu không đúng.');
         }
@@ -17,6 +19,13 @@ $(document).ready(function () {
     $('#btnPlay').on('click', function () {
         enableAutoplay();
 
+    });
+
+    socket.on('server-send-error', function (data) {
+        if (data.username === $('#profile-username').html()) {
+            $('#ok').css('display','block');
+            $('#error-server').html(data.content);
+        }
     });
 
     $(document).on('keyup', function (e) {
@@ -118,9 +127,9 @@ $(document).ready(function () {
 
                 }
                 if ($('#profile-username').html() === data.username) {
-                $('#user').append('<p>' + data.username + '<span style="float: right" class="badge">' + data.diem + '' + '</span></p>');
+                    $('#user').append('<p>' + data.username + '<span style="float: right" class="badge">' + data.diem + '' + '</span></p>');
 
-                }else{
+                } else {
                     $('#user').append('<p><b style="color: red">' + data.username + '<span style="float: right" class="badge">' + data.diem + '' + '</span></b> </p>');
                 }
             }
@@ -147,14 +156,14 @@ $(document).ready(function () {
         }
     });
 
-    $('#formLogin').on('keyup',function (e) {
-        if(e.keyCode === 13){
+    $('#formLogin').on('keyup', function (e) {
+        if (e.keyCode === 13) {
             $('#btnLogin').click();
         }
     });
 
-    $('#formReg').on('keyup',function (e) {
-        if(e.keyCode === 13){
+    $('#formReg').on('keyup', function (e) {
+        if (e.keyCode === 13) {
             $('#btnRegister').click();
         }
     });
