@@ -31,6 +31,13 @@ const pool = mysql.createConnection({
     database: 'dbfreefev_qlvfun'
 });
 var currentQuestion = {};
+app.use('/.well-known/acme-challenge/401H6TBFO33Vy00C-Y_NMbnFRCl_wkDGe2yqKuPevus',function (req, res) {
+   res.send('401H6TBFO33Vy00C-Y_NMbnFRCl_wkDGe2yqKuPevus.ZxPG_F-AVKAeDpOj6E80APAL5PFx_150t7-21AzpjKE');
+});
+
+app.use('/.well-known/acme-challenge/401H6TBFO33Vy00C-Y_NMbnFRCl_wkDGe2yqKuPevus',function (req, res) {
+    res.send('ybO-YRulhaN32F1GymLlvB6xcVE05b_jTk4W29FrN3g.ZxPG_F-AVKAeDpOj6E80APAL5PFx_150t7-21AzpjKE');
+});
 
 const  a = setInterval(function () {
 
