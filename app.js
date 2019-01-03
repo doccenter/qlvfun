@@ -1,13 +1,12 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var indexRouter = require('./routes/index');
-var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
-var session = require('express-session');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const indexRouter = require('./routes/index');
+const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+const session = require('express-session');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(logger('dev'));
@@ -33,7 +32,7 @@ const pool = mysql.createConnection({
 });
 var currentQuestion = {};
 
-setInterval(function () {
+const  a = setInterval(function () {
 
     if (time >= 11) {
         time--;
@@ -224,9 +223,6 @@ io.on('connection', function (socket) {
     });
 });
 
-function removeUser(username) {
-
-}
 
 app.use('/user/update', function (req, res) {
     req.session.acc = JSON.parse(req.query.data);
@@ -289,8 +285,8 @@ function copy() {
     });
     listUser = ds;
 }
-
 server.listen(process.env.PORT || '3000');
+
 module.exports.pool = pool;
 
 module.exports = app;
