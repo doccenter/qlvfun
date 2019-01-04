@@ -4,8 +4,11 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const app = express();
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
+const    http = require('http');
+const server = http.createServer(app);
+const io = require('socket.io').listen(server);
+
+
 const session = require('express-session');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

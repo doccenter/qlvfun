@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    var socket = io('/');
+    var socket = io.connect('/');
     socket.on('server-send-result-login', function (data) {
         if (data.data === 'ok') {
             $('#login_full_box').hide();
