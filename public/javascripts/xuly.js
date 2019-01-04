@@ -17,7 +17,7 @@ function getInfo(element) {
 }
 
 $(document).ready(function () {
-
+    $('#boxChat').scrollTop(1000);
     var socket = io.connect('/');
     socket.on('server-send-result-login', function (data) {
         if (data.data === 'ok') {
@@ -38,6 +38,10 @@ $(document).ready(function () {
         enableAutoplay();
     });
 
+    $('#close-alert').on('click', function () {
+
+        $('#ok').css('display', 'none');
+    });
 
     socket.on('server-send-chat-all', function (listChat) {
         $('#boxChat').empty();
