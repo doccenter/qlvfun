@@ -1,3 +1,21 @@
+function getInfo(element) {
+    $.ajax({
+        url: '/user/getInfo',
+        data: {
+            username: element.id
+        },
+        success: function (data) {
+            var acc = data.data;
+            $(element).empty();
+            var info = 'Tài khoản: ' + acc.username + '<br/>Điểm: ' + acc.diem;
+            $(element).append('<a href="#" class="detail-user"  rel="tooltip" data-toggle="tooltip" data-trigger="hover"  data-html="true"  data-placement="top" title="' + info + '">' + acc.username + '</a>');
+            element.onmouseenter = function () {
+                return false;
+            };
+        }
+    })
+}
+
 $(document).ready(function () {
 
     var socket = io.connect('/');
@@ -18,12 +36,41 @@ $(document).ready(function () {
     });
     $('#btnPlay').on('click', function () {
         enableAutoplay();
-
     });
+
+
+    socket.on('server-send-chat-all', function (listChat) {
+        $('#boxChat').empty();
+        listChat.forEach(function (data) {
+            if (data.username === $('#profile-username').html().trim()) {
+                $('#boxChat').append('<div style="border: 1px solid green;margin-bottom: 10px"><b style="color: red">' + data.username + '</b>: ' + data.message + '</div>');
+            } else {
+                $('#boxChat').append('<div  style="border: 1px solid green;margin-bottom: 10px"><b onmouseenter="getInfo(this)" id="' + data.username + '" ><a href="#" class="detail-user"  rel="tooltip" data-toggle="tooltip" data-trigger="hover"  data-html="true"  data-placement="top" title="Loading...">' + data.username + '</a></b>: ' + data.message + '</div>');
+            }
+        });
+        $('#boxChat').scrollTop(1000);
+    });
+
+    $('#btnChat').on('click', function () {
+        if ($('#input-chat').val() !== '') {
+            socket.emit('user-send-chat-all', {
+                username: $('#profile-username').html(),
+                message: $('#input-chat').val()
+            });
+            $('#input-chat').val('');
+        }
+    });
+
+    $('#input-chat').on('keyup', function (e) {
+        if (e.keyCode === 13) {
+            $('#btnChat').click();
+        }
+    });
+
 
     socket.on('server-send-error', function (data) {
         if (data.username === $('#profile-username').html()) {
-            $('#ok').css('display','block');
+            $('#ok').css('display', 'block');
             $('#error-server').html(data.content);
         }
     });

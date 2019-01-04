@@ -5,7 +5,6 @@
     <link rel='stylesheet' href='/stylesheets/style.css'/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 
     <!-- Datatables -->
@@ -82,13 +81,13 @@
                         <audio controls id="myAudio" style="display: none">
                          <source id="fileAudio" src="#" type="audio/mpeg">
                         </audio>
-                            <button class="btn btn-success" id="btnPlay"><i class="fa fa-fast-forward" aria-hidden="true"></i> Nghe thử</button>
+                            <button class="btn btn-success" id="btnPlay"><i class="fa fa-play" aria-hidden="true"></i> Nghe thử</button>
                          <button class="btn btn-danger"  id="btnBaoLoi"><i class="fa fa-info-circle" aria-hidden="true"></i> Báo cáo 1 số sai lệch về từ này</button>
                  </div>
                 <hr>
                 <div id="huongdan">
                     <h3>Hướng dẫn sử dụng</h3>
-                            <p>- Trả lời đúng và nhanh nhất được + 1 <a href="#">điểm</a></p>
+                            <p>- Trả lời đúng và nhanh nhất được + 1 <a rel="tooltip" data-toggle="tooltip" title="Các bạn sẽ dùng điểm này để tải tài liệu hoặc sử dụng API" href="#">điểm</a></p>
                             <p>- Với PC sử dụng phím tắt: ESC để làm mới câu trả lời, Enter để trả lời</p>
                 </div>
 
@@ -108,13 +107,14 @@
                 </table>
             </div>
             <div class="col-sm-3">
+
                 <div class="row">
                     <div class="panel panel-primary">
                         <div class="panel-heading"><i class="fa fa-diamond" aria-hidden="true"></i> Profile <a data-toggle="tooltip" data-placement="top" title="Đăng xuất" class="btn btn-danger" href="/user/logout" id="lgout"><i class="fa fa-sign-out" aria-hidden="true"></i></a></div>
                         <div class="panel-body" style="color: #0f0f0f">
                             <p>Tài khoản: <span id="profile-username">
                                     <% if(acc !== undefined){ %>
-                                    <%= acc.username %>
+                                        <%= acc.username %>
                                     <% } %>
                                 </span>
                             </p>
@@ -127,6 +127,24 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="panel panel-primary" >
+                        <div class="panel-heading"><i class="fa fa-comments" aria-hidden="true"></i> Chat tổng (30 tin mới nhất)</div>
+                        <div class="panel-body" >
+                            <div class="row" id="boxChat" style="color: #0f0f0f; overflow-y: scroll; height: 250px;padding-left: 3%;padding-right: 3%" >
+
+                            </div>
+                            <div class="row">
+                                <div style="padding-left: 3%;padding-right: 3%" class="input-group">
+                                    <input type="text" id="input-chat" placeholder="Nói gì đó đi..." class="form-control">
+                                    <span  id="btnChat"  style="background-color: green;color: white" class="input-group-addon"><i class="fa fa-paper-plane" aria-hidden="true"></i></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="row">
                     <div class="panel panel-primary" >
@@ -150,6 +168,8 @@
 <script src="/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
 <script src="/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
 <script src="/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 <script>
     var x = document.getElementById("myAudio");
 
@@ -160,5 +180,12 @@
 
     </script>
 <script src="/build/js/custom.min.js"></script>
+<script type="text/javascript">
+    $(function($){
+        $('body').tooltip({
+            selector: '[rel=tooltip]'
+        });
+    });
+</script>
 </body>
 </html>

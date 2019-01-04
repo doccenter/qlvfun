@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const app = express();
-const    http = require('http');
+const http = require('http');
 const server = http.createServer(app);
 const io = require('socket.io').listen(server);
 
@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 var listUser = [];
 var listAnswer = [];
-var question = {};
+var listChat = [];
 
 var time = 15;
 const mysql = require('mysql');
@@ -143,9 +143,18 @@ app.use('/translate', function (req, res, n) {
 
 io.on('connection', function (socket) {
     io.sockets.emit('server-send-list-user', listUser);
+    io.sockets.emit('server-send-chat-all', listChat);
     socket.on('request-list-user', function (data) {
         console.log('Có gửi');
         io.sockets.emit('server-send-list-user', listUser);
+    });
+
+    socket.on('user-send-chat-all', function (data) {
+        if (listChat.length === 30) {
+            listChat.shift();
+        }
+        listChat.push(data);
+        io.sockets.emit('server-send-chat-all', listChat);
     });
 
     socket.on('user-send-report', function (data) {
@@ -264,6 +273,15 @@ app.use('/user/login', function (req, res) {
 app.use('/user/register', function (req, res) {
     req.session.acc = JSON.parse(req.query.data);
     return res.json({data: 'ok'});
+});
+
+app.use('/user/getInfo', function (req, res) {
+    var username = req.query.username;
+    pool.query('select * from account where username=?', [username], function (e, r, f) {
+        if (e) return res.json({data: 'ok'});
+        return res.json({data: r[0]});
+    });
+
 });
 
 
